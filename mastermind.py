@@ -56,6 +56,8 @@ for i in range(0, 12):
     for x in range(0, 4):
         dots.add(dot((53, 53, 53), (40 * x + 260, 40 * i + 20)))
 
+pygame.draw.rect(screen, (0, 80, 0), (580, 440, 40, 30))
+
 #-----mainloop-----#
 
 while running:
