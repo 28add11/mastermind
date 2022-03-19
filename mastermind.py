@@ -18,6 +18,8 @@ combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
 dots = pygame.sprite.Group()
 gamefont = pygame.font.Font(None, 40)
 guessframe = False
+win = False
+loss = False
 
 print(combo)
 
@@ -100,11 +102,24 @@ while running:
         row += 1
         guessframe = False
         print(row)
-        if guess == combo:
-            screen.fill((193, 193, 193))
-            wintext = gamefont.render("You did it!", True, (10, 10, 10))
-            wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
-            screen.blit(wintext, wintextpos)
+        if row < 12:
+            if guess == combo:
+                win = True
+        else:
+            loss = True
+        
+    if win:
+        screen.fill((193, 193, 193))
+        wintext = gamefont.render("You did it!", True, (10, 10, 10))
+        wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
+        screen.blit(wintext, wintextpos)            
+
+    if loss:
+        screen.fill((193, 193, 193))
+        losetext = gamefont.render("You lost", True, (10, 10, 10))
+        losetextpos = losetext.get_rect(centerx=screen.get_width() / 2, y=10)
+        screen.blit(losetext, losetextpos)
+            
         
     pygame.display.update()
 
