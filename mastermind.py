@@ -1,5 +1,4 @@
 from random import randint
-from turtle import position
 import pygame
 
 pygame.init()
@@ -11,8 +10,6 @@ running = True
 mbd = False
 clock = pygame.time.Clock()
 row = 0
-colorthere = 0
-inpos = 0
 guess = [0, 0, 0, 0]
 combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
 dots = pygame.sprite.Group()
@@ -73,6 +70,8 @@ while running:
 
     clock.tick(60)
 
+
+
     for i in pygame.event.get():
         match i.type:
             case pygame.QUIT:
@@ -99,14 +98,33 @@ while running:
     dots.update(screen)
 
     if guessframe:
-        row += 1
-        guessframe = False
-        print(row)
-        if row < 12:
+
+        colorthere = 0
+        inpos = 0
+
+        for i in guess:
+            if i in combo:
+                colorthere += 1
+                guessind = guess.index(i)
+                if i == combo[guessind]:
+                    inpos += 1
+
+        strct = str(colorthere)
+        strinp = str(inpos)
+        textct = gamefont.render(strct, True, (10, 10, 10))
+        textinp = gamefont.render(strinp, True, (255, 50, 50))
+        screen.blit(textct, pygame.rect.Rect(410, 40 * row + 10, 20, 20))
+        screen.blit(textinp, pygame.rect.Rect(220, 40 * row + 10, 20, 20))
+
+        if row < 11:
             if guess == combo:
                 win = True
         else:
             loss = True
+
+        row += 1
+        guessframe = False
+        guess = [0, 0, 0, 0]
         
     if win:
         screen.fill((193, 193, 193))
