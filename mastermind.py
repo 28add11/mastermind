@@ -83,7 +83,7 @@ while running:
                 else:
                     for i in dots:
                         irect = pygame.Rect(i.position[0] - 10, i.position[1] - 10, 20, 20)
-                        if irect.collidepoint(mouse):
+                        if irect.collidepoint(mouse) and ((i.position[1] - 20) / 40) == row:
                             i.clicked()
                             x = (i.position[0] - 260) / 40
                             x = int(x)
@@ -97,6 +97,9 @@ while running:
     dots.update(screen)
 
     if guessframe:
+        row += 1
+        guessframe = False
+        print(row)
         if guess == combo:
             screen.fill((193, 193, 193))
             wintext = gamefont.render("You did it!", True, (10, 10, 10))
