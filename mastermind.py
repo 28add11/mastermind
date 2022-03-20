@@ -12,6 +12,7 @@ clock = pygame.time.Clock()
 row = 0
 guess = [0, 0, 0, 0]
 combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
+combocopy = combo
 dots = pygame.sprite.Group()
 gamefont = pygame.font.Font(None, 40)
 guessframe = False
@@ -49,97 +50,102 @@ class dot(pygame.sprite.Sprite):
                 self.color = (53, 53, 53)
 
         
-
-screen.fill((193, 193, 193))
-pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
-for i in range(0, 12):
-    for x in range(0, 4):
-        dots.add(dot((53, 53, 53), (40 * x + 260, 40 * i + 20)))
-
-
-pygame.draw.rect(screen, (0, 0, 0), (495, 415, 140, 60))
-guessbox = pygame.Rect(500, 420, 130, 50)
-pygame.draw.rect(screen, (0, 80, 0), guessbox)
-guesstext = gamefont.render("Guess", True, (10, 10, 10))
-guesstextpos = (520, 430)
-screen.blit(guesstext, guesstextpos)
-
-#-----mainloop-----#
-
-while running:
-
-    clock.tick(60)
+def mainmaster():
+    
+    screen.fill((193, 193, 193))
+    pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
+    for i in range(0, 12):
+        for x in range(0, 4):
+            dots.add(dot((53, 53, 53), (40 * x + 260, 40 * i + 20)))
 
 
+    pygame.draw.rect(screen, (0, 0, 0), (495, 415, 140, 60))
+    guessbox = pygame.Rect(500, 420, 130, 50)
+    pygame.draw.rect(screen, (0, 80, 0), guessbox)
+    guesstext = gamefont.render("Guess", True, (10, 10, 10))
+    guesstextpos = (520, 430)
+    screen.blit(guesstext, guesstextpos)
 
-    for i in pygame.event.get():
-        match i.type:
-            case pygame.QUIT:
-                running = False
+    #-----mainloop-----#
 
-            case pygame.MOUSEBUTTONUP:
-                mouse = pygame.mouse.get_pos()
-                if guessbox.collidepoint(mouse):
-                    guessframe = True
-                else:
-                    for i in dots:
-                        irect = pygame.Rect(i.position[0] - 10, i.position[1] - 10, 20, 20)
-                        if irect.collidepoint(mouse) and ((i.position[1] - 20) / 40) == row:
-                            i.clicked()
-                            x = (i.position[0] - 260) / 40
-                            x = int(x)
-                            if guess[x] != 7:
-                                guess[x] += 1
-                            else:
-                                guess[x] = 0
-                
+    while running:
+
+        clock.tick(60)
 
 
-    dots.update(screen)
 
-    if guessframe:
+        for i in pygame.event.get():
+            match i.type:
+                case pygame.QUIT:
+                    running = False
 
-        colorthere = 0
-        inpos = 0
+                case pygame.MOUSEBUTTONUP:
+                    mouse = pygame.mouse.get_pos()
+                    if guessbox.collidepoint(mouse):
+                        guessframe = True
+                    else:
+                        for i in dots:
+                            irect = pygame.Rect(i.position[0] - 10, i.position[1] - 10, 20, 20)
+                            if irect.collidepoint(mouse) and ((i.position[1] - 20) / 40) == row:
+                                i.clicked()
+                                x = (i.position[0] - 260) / 40
+                                x = int(x)
+                                if guess[x] != 7:
+                                    guess[x] += 1
+                                else:
+                                    guess[x] = 0
 
-        for i in guess:
-            if i in combo:
-                colorthere += 1
-                guessind = guess.index(i)
-                if i == combo[guessind]:
-                    inpos += 1
 
-        strct = str(colorthere)
-        strinp = str(inpos)
-        textct = gamefont.render(strct, True, (10, 10, 10))
-        textinp = gamefont.render(strinp, True, (255, 50, 50))
-        screen.blit(textct, pygame.rect.Rect(410, 40 * row + 10, 20, 20))
-        screen.blit(textinp, pygame.rect.Rect(220, 40 * row + 10, 20, 20))
 
-        if row < 11:
-            if guess == combo:
-                win = True
-        else:
-            loss = True
+        dots.update(screen)
 
-        row += 1
-        guessframe = False
-        guess = [0, 0, 0, 0]
-        
-    if win:
-        screen.fill((193, 193, 193))
-        wintext = gamefont.render("You did it!", True, (10, 10, 10))
-        wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
-        screen.blit(wintext, wintextpos)            
+        if guessframe:
 
-    if loss:
-        screen.fill((193, 193, 193))
-        losetext = gamefont.render("You lost", True, (10, 10, 10))
-        losetextpos = losetext.get_rect(centerx=screen.get_width() / 2, y=10)
-        screen.blit(losetext, losetextpos)
-            
-        
-    pygame.display.update()
+            colorthere = 0
+            inpos = 0
+
+            for i in guess:
+                if i in combo:
+                    colorthere += 1
+                    guessind = guess.index(i)
+
+                    if i == combo[guessind]:
+                        inpos += 1
+
+                    combo.remove(i)
+
+            strct = str(colorthere)
+            strinp = str(inpos)
+            textct = gamefont.render(strct, True, (10, 10, 10))
+            textinp = gamefont.render(strinp, True, (255, 50, 50))
+            screen.blit(textct, pygame.rect.Rect(410, 40 * row + 10, 20, 20))
+            screen.blit(textinp, pygame.rect.Rect(220, 40 * row + 10, 20, 20))
+
+            if row < 11:
+                if guess == combo:
+                    win = True
+            else:
+                loss = True
+
+            row += 1
+            guessframe = False
+            guess = [0, 0, 0, 0]
+            combo = combocopy
+
+        if win:
+            screen.fill((193, 193, 193))
+            wintext = gamefont.render("You did it!", True, (10, 10, 10))
+            wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
+            screen.blit(wintext, wintextpos)            
+
+        if loss:
+            screen.fill((193, 193, 193))
+            losetext = gamefont.render("You lost", True, (10, 10, 10))
+            losetextpos = losetext.get_rect(centerx=screen.get_width() / 2, y=10)
+            screen.blit(losetext, losetextpos)
+
+
+        pygame.display.update()
 
 
 pygame.quit
