@@ -1,25 +1,8 @@
-from random import randint
 import pygame
 
 pygame.init()
 
 #-----setup stuff-----#
-
-screen = pygame.display.set_mode((640, 480))
-running = True
-mbd = False
-clock = pygame.time.Clock()
-row = 0
-guess = [0, 0, 0, 0]
-combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
-combocopy = combo
-dots = pygame.sprite.Group()
-gamefont = pygame.font.Font(None, 40)
-guessframe = False
-win = False
-loss = False
-
-print(combo)
 
 class dot(pygame.sprite.Sprite):
     def __init__(self, color, position):
@@ -30,7 +13,7 @@ class dot(pygame.sprite.Sprite):
     def update(self, window):
         pygame.draw.circle(window, self.color, self.position, 10)
 
-    def clicked(self):
+    def clicked(self, plus):
         match self.color:
             case (53, 53, 53):
                 self.color = (193, 193, 193)
@@ -50,11 +33,34 @@ class dot(pygame.sprite.Sprite):
                 self.color = (53, 53, 53)
 
         
-def mainmaster():
+def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, combo, gamefont):
+    '''The main base function for the game
+    screen is the screen things will be displaid on, clock is a pygame clock, rowmax is the num of rows with max of 11(to make it harder), 
+    combo is the games final combo (set in main for networking), and gamefont is the font'''
+
+    dots = pygame.sprite.Group()
+    row = 0
+    running = True
+    win = False
+    loss = False
+    guessframe = False
+    guess = [0, 0, 0, 0]
+
+    #dots is the group with dots (i know, revolutionary)
+    #row is the current row you are playing on
+    #running is... i dont know maybe if the game is running
+    #win. did you win?
+    #loss. did you lose?
+    #guessframe tells if you pressed the guess button on that frame
+
+    #those were some patronising comments
+
+    print(combo)
     
+    #these just create static screen elements
     screen.fill((193, 193, 193))
     pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
-    for i in range(0, 12):
+    for i in range(0, rowmax):
         for x in range(0, 4):
             dots.add(dot((53, 53, 53), (40 * x + 260, 40 * i + 20)))
 
@@ -66,28 +72,39 @@ def mainmaster():
     guesstextpos = (520, 430)
     screen.blit(guesstext, guesstextpos)
 
-    #-----mainloop-----#
+    #-----stuff-----#
+
 
     while running:
+    #-----mainloop-----#
 
         clock.tick(60)
 
 
 
-        for i in pygame.event.get():
+        for i in pygame.event.get():            
             match i.type:
                 case pygame.QUIT:
                     running = False
 
                 case pygame.MOUSEBUTTONUP:
+                    #this first bit just is about getting all the important shit
+                    #colorup is for wether the colors of the dots go up or down
+                    if i.button == 1 or i.button == 4:
+                        colorup = True
+                    else:
+                        colorup = False
                     mouse = pygame.mouse.get_pos()
+
                     if guessbox.collidepoint(mouse):
                         guessframe = True
-                    else:
+
+                    else: #else because no one is going to click both at the same time unless they are doing some magic
                         for i in dots:
-                            irect = pygame.Rect(i.position[0] - 10, i.position[1] - 10, 20, 20)
+                            irect = pygame.Rect(i.position[0] - 10, i.position[1] - 10, 20, 20) #hehe irect sounds like erect
+                            #in all seriousness though, this just creates the hitboxes for the dots then checks if they were clicked
                             if irect.collidepoint(mouse) and ((i.position[1] - 20) / 40) == row:
-                                i.clicked()
+                                i.clicked(colorup)
                                 x = (i.position[0] - 260) / 40
                                 x = int(x)
                                 if guess[x] != 7:
@@ -108,11 +125,12 @@ def mainmaster():
                 if i in combo:
                     colorthere += 1
                     guessind = guess.index(i)
+                    print(guessind, combo, guess)
 
                     if i == combo[guessind]:
                         inpos += 1
 
-                    combo.remove(i)
+                    guess.remove(i)
 
             strct = str(colorthere)
             strinp = str(inpos)
@@ -121,7 +139,7 @@ def mainmaster():
             screen.blit(textct, pygame.rect.Rect(410, 40 * row + 10, 20, 20))
             screen.blit(textinp, pygame.rect.Rect(220, 40 * row + 10, 20, 20))
 
-            if row < 11:
+            if row < rowmax - 1:
                 if guess == combo:
                     win = True
             else:
@@ -130,7 +148,7 @@ def mainmaster():
             row += 1
             guessframe = False
             guess = [0, 0, 0, 0]
-            combo = combocopy
+            
 
         if win:
             screen.fill((193, 193, 193))
@@ -146,6 +164,3 @@ def mainmaster():
 
 
         pygame.display.update()
-
-
-pygame.quit
