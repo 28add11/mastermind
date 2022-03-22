@@ -121,16 +121,12 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             colorthere = 0
             inpos = 0
 
-            for i in guess:
-                if i in combo:
+            for i in range(0, 4):
+                if guess[i] in combo:
                     colorthere += 1
-                    guessind = guess.index(i)
-                    print(guessind, combo, guess)
-
-                    if i == combo[guessind]:
+                    
+                    if guess[i] == combo[i]:
                         inpos += 1
-
-                    guess.remove(i)
 
             strct = str(colorthere)
             strinp = str(inpos)
