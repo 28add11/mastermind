@@ -43,7 +43,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
     running = True
     win = False
     loss = False
-    guessframe = False
+    guessframe = False 
     guess = [0, 0, 0, 0]
 
     #dots is the group with dots (i know, revolutionary)
@@ -118,22 +118,36 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
         if guessframe:
 
+            #so here there is a bug where the game wants to say you have all 4 colors on the row if you put one color and that color happens to be in the combo
+            #im getting around this by replacing the already "gone to" list items with an impossible (to the game at least) number, 8. if i did list.remove it just fucking broke
+            #thats what combocopy is for
+            #aside from that weird fix this is really just simple code for checking if an item is in a list
             colorthere = 0
             inpos = 0
+            combocopy = combo.copy()
 
             for i in range(0, 4):
                 if guess[i] in combo:
                     colorthere += 1
-                    
-                    if guess[i] == combo[i]:
+
+                    comboind = combo.index(guess[i])
+
+                    if combo[comboind] == guess[comboind]:
                         inpos += 1
+
+                    
+                    combo[comboind] = 8
+
+
+            combo = combocopy.copy()
 
             strct = str(colorthere)
             strinp = str(inpos)
             textct = gamefont.render(strct, True, (10, 10, 10))
             textinp = gamefont.render(strinp, True, (255, 50, 50))
             screen.blit(textct, pygame.rect.Rect(410, 40 * row + 10, 20, 20))
-            screen.blit(textinp, pygame.rect.Rect(220, 40 * row + 10, 20, 20))
+            screen.blit(textinp, pygame.rect.Rect(220, 40 * row + 10, 20, 20))\
+     
 
             if row < rowmax - 1:
                 if guess == combo:
