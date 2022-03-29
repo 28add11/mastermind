@@ -12,6 +12,7 @@ combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
 mbu = False
 
 startbutton = button((80, 210, 80, 60), (0, 80, 0), "Start!", 0, (85, 225))
+quitbutton = button((480, 210, 80, 60), (80, 0, 0), "Quit", 0, (490, 225))
 
 #-----stuff-----#
 
@@ -39,6 +40,9 @@ while running:
 
     if startbutton.update(screen, mouse, mbu):
         mastermind.mainmaster(screen, clock, 12, combo)
+
+    elif quitbutton.update(screen, mouse, mbu):
+        running = False
 
     mbu = False
 
