@@ -123,11 +123,18 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                             x = (i.position[0] - 260) / 40
                             x = int(x)
 
-                            if guess[x] != 7:
-                                guess[x] += 1
 
+                            if colorup:
+                                if guess[x] != 7:
+                                    guess[x] += 1
+
+                                else:
+                                    guess[x] = 0
                             else:
-                                guess[x] = 0
+                                if guess[x] != 0:
+                                    guess[x] -= 1
+                                else:
+                                    guess[x] = 7
                                 
 
 
