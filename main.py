@@ -8,7 +8,6 @@ gamefont = pygame.font.Font(None, 40)
 screen = pygame.display.set_mode((640, 480))
 running = True
 clock = pygame.time.Clock()
-combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
 mbu = False
 
 startbutton = button((80, 210, 80, 60), (0, 80, 0), "Start!", 0, (85, 225))
@@ -39,6 +38,7 @@ while running:
     screen.blit(titletext, titletextpos)   
 
     if startbutton.update(screen, mouse, mbu):
+        combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
         mastermind.mainmaster(screen, clock, 12, combo)
 
     elif quitbutton.update(screen, mouse, mbu):

@@ -19,32 +19,31 @@ class rownum(pygame.sprite.Sprite):
 
 
 class dot(pygame.sprite.Sprite):
-    def __init__(self, color, position):
+    def __init__(self, color, position, colorind : int):
         self.color = color
         self.position = position
+        self.colorind = colorind
         pygame.sprite.Sprite.__init__(self)
 
     def update(self, window):
         pygame.draw.circle(window, self.color, self.position, 10)
 
     def clicked(self, plus):
-        match self.color:
-            case (53, 53, 53):
-                self.color = (193, 193, 193)
-            case (193, 193, 193):
-                self.color = (255, 50, 50)
-            case (255, 50, 50):
-                self.color = (50, 255, 50)
-            case (50, 255, 50):
-                self.color = (50, 50, 255)
-            case (50, 50, 255):
-                self.color = (255, 255, 0)
-            case (255, 255, 0):
-                self.color = (255, 0, 255)
-            case (255, 0, 255):
-                self.color = (255, 127, 0)
-            case (255, 127, 0):
-                self.color = (53, 53, 53)
+        colors = ((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
+            (255, 0, 255), (255, 127, 0))
+        
+        if plus:
+            if self.colorind < 7:
+                self.colorind += 1
+            else:
+                self.colorind = 0
+        else:
+            if self.colorind > 0:
+                self.colorind -= 1
+            else:
+                self.colorind = 7
+        
+        self.color = colors[self.colorind]
 
         
 def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, combo):
@@ -57,7 +56,6 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
     gamefont = pygame.font.Font(None, 40)
     row = 0
     running = True
-    guessframe = False 
     guess = [0, 0, 0, 0]
     mbu = False
     win = False
@@ -68,7 +66,6 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
     #running is... i dont know maybe if the game is running
     #win. did you win?
     #loss. did you lose?
-    #guessframe tells if you pressed the guess button on that frame
     #mbu is wether or not the mouse button was released that frame
 
     #those were some patronising comments
@@ -80,7 +77,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
     for i in range(0, rowmax):
         for x in range(0, 4):
-            dots.add(dot((53, 53, 53), (40 * x + 260, 40 * i + 20)))
+            dots.add(dot((53, 53, 53), (40 * x + 260, 40 * i + 20), 0))
 
 
     guessbutton = button((480, 400, 130, 50), (0, 80, 0), "Guess", 0, (502, 410))

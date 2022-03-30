@@ -3,7 +3,7 @@ import pygame
 
 class button(pygame.sprite.Sprite):
     '''class for handling buttons in pygame. when the button is hovered over it will grow (waow.)
-    also will tell you if it's been clicked'''
+    will tell you if it's been clicked by returning true. check this by doing if button(args): then what you want it to do'''
     def __init__(self, rect : pygame.Rect, color : tuple, text : str, hoverframes : int, textpos : tuple):
         self.rect = pygame.Rect(rect)
         self.rectcopy = pygame.Rect(rect)
