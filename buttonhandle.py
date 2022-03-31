@@ -26,8 +26,6 @@ class button(pygame.sprite.Sprite):
 
             if self.hoverframes < 10:
                 self.hoverframes += 1
-            
-            self.color = (self.colorcopy[0] + self.hoverframes, self.colorcopy[1] + self.hoverframes, self.colorcopy[2] + self.hoverframes)
 
             if self.rect.collidepoint(mousepos) and mousebuttonup:
                 return True
@@ -38,10 +36,11 @@ class button(pygame.sprite.Sprite):
             if self.hoverframes > self.originalhover:
                 self.hoverframes -= 1
 
-            self.color = (self.colorcopy[0] + self.hoverframes, self.colorcopy[1] + self.hoverframes, self.colorcopy[2] + self.hoverframes)
 
         self.rect = pygame.Rect(self.rectcopy[0] - self.hoverframes, self.rectcopy[1] - self.hoverframes, 
         self.rectcopy[2] + (self.hoverframes * 2), self.rectcopy[3] + (self.hoverframes * 2))
+
+        self.color = (self.colorcopy[0] + self.hoverframes, self.colorcopy[1] + self.hoverframes, self.colorcopy[2] + self.hoverframes)
 
 
         pygame.draw.rect(window, (0, 0, 0), (self.rect[0] - 5, self.rect[1] - 5, 
