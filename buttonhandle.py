@@ -17,12 +17,11 @@ class button(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self)
 
-    def update(self, window : pygame.display, mousepos : tuple, mousebuttonup : bool):
-
-        font = pygame.font.Font(None, 40)
+    def update(self, window : pygame.display, mousepos : tuple, mousebuttonup : bool, font : pygame.font.Font):
 
         if self.rect.collidepoint(mousepos):
 
+            print(self.color)
 
             if self.hoverframes < 10:
                 self.hoverframes += 1
@@ -40,7 +39,8 @@ class button(pygame.sprite.Sprite):
         self.rect = pygame.Rect(self.rectcopy[0] - self.hoverframes, self.rectcopy[1] - self.hoverframes, 
         self.rectcopy[2] + (self.hoverframes * 2), self.rectcopy[3] + (self.hoverframes * 2))
 
-        self.color = (self.colorcopy[0] + self.hoverframes, self.colorcopy[1] + self.hoverframes, self.colorcopy[2] + self.hoverframes)
+        if max(self.colorcopy) <= 245:
+            self.color = (self.colorcopy[0] + self.hoverframes, self.colorcopy[1] + self.hoverframes, self.colorcopy[2] + self.hoverframes)
 
 
         pygame.draw.rect(window, (0, 0, 0), (self.rect[0] - 5, self.rect[1] - 5, 

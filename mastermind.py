@@ -137,46 +137,47 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
         rownums.update(screen, gamefont)
 
 
-        if guessbutton.update(screen, mouse, mbu):
-            #this deals with if the player presses the guess button
-            #so here there is a bug where the game wants to say you have all 4 colors on the row if you put one color and that color happens to be in the combo
-            #im getting around this by replacing the already "gone to" list items with an impossible (to the game at least) number, 8. if i did list.remove it just fucking broke
-            #thats what combocopy is for
-            #aside from that weird fix this is really just simple code for checking if an item is in a list
-            colorthere = 0
-            inpos = 0
-            combocopy = combo.copy()
+        if not win and not loss:
+            if guessbutton.update(screen, mouse, mbu, gamefont):
+                #this deals with if the player presses the guess button
+                #so here there is a bug where the game wants to say you have all 4 colors on the row if you put one color and that color happens to be in the combo
+                #im getting around this by replacing the already "gone to" list items with an impossible (to the game at least) number, 8. if i did list.remove it just fucking broke
+                #thats what combocopy is for
+                #aside from that weird fix this is really just simple code for checking if an item is in a list
+                colorthere = 0
+                inpos = 0
+                combocopy = combo.copy()
 
-            for i in range(0, 4):
-                if guess[i] in combo:
-                    colorthere += 1
+                for i in range(0, 4):
+                    if guess[i] in combo:
+                        colorthere += 1
 
-                    comboind = combo.index(guess[i])
+                        comboind = combo.index(guess[i])
 
-                    if combo[comboind] == guess[comboind]:
-                        inpos += 1
-
-                    
-                    combo[comboind] = 8
-
-            combo = combocopy.copy()
+                        if combo[comboind] == guess[comboind]:
+                            inpos += 1
 
 
-            strct = str(colorthere)
-            strinp = str(inpos)
-            classnums = [strct, strinp]
-            
-            rownums.add(rownum(row, classnums))
-     
+                        combo[comboind] = 8
 
-            if row < rowmax - 1:
-                if guess == combo:
-                    win = True
-            else:
-                loss = True
+                combo = combocopy.copy()
 
-            row += 1
-            guess = [0, 0, 0, 0]
+
+                strct = str(colorthere)
+                strinp = str(inpos)
+                classnums = [strct, strinp]
+
+                rownums.add(rownum(row, classnums))
+
+
+                if row < rowmax - 1:
+                   if guess == combo:
+                        win = True
+                else:
+                    loss = True
+
+                row += 1
+                guess = [0, 0, 0, 0]
 
 
         if win:
@@ -184,7 +185,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             wintext = gamefont.render("You did it!", True, (10, 10, 10))
             wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
             screen.blit(wintext, wintextpos) 
-            if mainbutton.update(screen, mouse, mbu):
+            if mainbutton.update(screen, mouse, mbu, gamefont):
                 running = False        
 
         elif loss:
@@ -192,7 +193,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             losetext = gamefont.render("You lost", True, (10, 10, 10))
             losetextpos = losetext.get_rect(centerx=screen.get_width() / 2, y=10)
             screen.blit(losetext, losetextpos)
-            if mainbutton.update(screen, mouse, mbu):
+            if mainbutton.update(screen, mouse, mbu, gamefont):
                 running = False
 
 

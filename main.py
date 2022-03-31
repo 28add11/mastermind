@@ -37,11 +37,11 @@ while running:
     titletextpos = titletext.get_rect(centerx=screen.get_width() / 2, y=10)
     screen.blit(titletext, titletextpos)   
 
-    if startbutton.update(screen, mouse, mbu):
+    if startbutton.update(screen, mouse, mbu, gamefont):
         combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
         mastermind.mainmaster(screen, clock, 12, combo)
 
-    elif quitbutton.update(screen, mouse, mbu):
+    elif quitbutton.update(screen, mouse, mbu, gamefont):
         running = False
 
     mbu = False
