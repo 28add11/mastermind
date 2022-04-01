@@ -69,7 +69,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
 
     guessbutton = button((480, 400, 130, 50), (0, 80, 0), "Guess", 0, (502, 410))
-    mainbutton = button((255, 215, 130, 50), (252, 252, 80), "Main Menu", 0, (255, 215))
+    mainbutton = button((235, 215, 170, 50), (252, 252, 80), "Main Menu", 0, (245, 225))
 
 
 

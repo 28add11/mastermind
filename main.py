@@ -3,6 +3,8 @@ import mastermind
 from buttonhandle import button
 from random import randint
 
+pygame.init()
+
 gamefont = pygame.font.Font(None, 40)
 
 screen = pygame.display.set_mode((640, 480))
@@ -12,6 +14,7 @@ mbu = False
 
 startbutton = button((80, 210, 80, 60), (0, 80, 0), "Start!", 0, (85, 225))
 quitbutton = button((480, 210, 80, 60), (80, 0, 0), "Quit", 0, (490, 225))
+
 
 #-----stuff-----#
 
