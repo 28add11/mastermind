@@ -1,4 +1,6 @@
 import pygame
+import pickle
+import datetime
 from buttonhandle import button
 
 pygame.init()
@@ -19,19 +21,20 @@ class rownum(pygame.sprite.Sprite):
 
 
 class dot(pygame.sprite.Sprite):
-    def __init__(self, color, position):
-        self.color = color
+    def __init__(self, position):
+        self.color = 0
         self.position = position
         pygame.sprite.Sprite.__init__(self)
 
     def update(self, window):
-        pygame.draw.circle(window, self.color, self.position, 10)
-
-    def clicked(self, colorind):
         colors = ((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
             (255, 0, 255), (255, 127, 0))
+
+        pygame.draw.circle(window, colors[self.color], (40 * self.position[0] + 260, 40 * self.position[1] + 20), 10)
+
+    def clicked(self, colorind):
         
-        self.color = colors[colorind]
+        self.color = colorind
 
         
 def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, combo):
@@ -42,6 +45,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
     dots = pygame.sprite.Group()
     rownums = pygame.sprite.Group()
     gamefont = pygame.font.Font(None, 40)
+    time = datetime.datetime.now()
     row = 0
     running = True
     guess = [0, 0, 0, 0]
@@ -65,7 +69,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
     for i in range(0, rowmax):
         for x in range(0, 4):
-            dots.add(dot((53, 53, 53), (40 * x + 260, 40 * i + 20)))
+            dots.add(dot((x, i)))
 
 
     guessbutton = button((480, 400, 130, 50), (0, 80, 0), "Guess", 0, (502, 410))
@@ -104,13 +108,11 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                         colorup = False
 
                     for i in dots:
-                        irect = pygame.Rect(i.position[0] - 10, i.position[1] - 10, 20, 20) #hehe irect sounds like erect
+                        irect = pygame.Rect(40 * i.position[0] + 250, 40 * i.position[1] + 10, 20, 20) #hehe irect sounds like erect
                         #in all seriousness though, this just creates the hitboxes for the dots then checks if they were clicked
 
-                        if irect.collidepoint(mouse) and ((i.position[1] - 20) / 40) == row:
-                            x = (i.position[0] - 260) / 40
-                            x = int(x)
-
+                        if irect.collidepoint(mouse) and (i.position[1]) == row:
+                            x = i.position[0]
 
                             if colorup:
                                 if guess[x] != 7:
@@ -184,9 +186,31 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             screen.fill((193, 193, 193))
             wintext = gamefont.render("You did it!", True, (10, 10, 10))
             wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
-            screen.blit(wintext, wintextpos) 
+            screen.blit(wintext, wintextpos)
             if mainbutton.update(screen, mouse, mbu, gamefont):
-                running = False        
+                running = False
+
+                with open("pastgames", "ab") as file:
+
+                    data = []
+                    tempdata = []
+
+                    for i in rownums:
+                        tempdata.append(i.nums)
+                    data.append(tempdata)
+                    tempdata = []
+                    for x in dots:
+                        tempdata.append(x.color)
+                    data.append(tempdata)
+                    data.append(combo)
+                    data.append((time.year, time.month, time.day, time.hour, time.minute))
+
+                    print(data)
+
+                    pickledata = pickle.dumps(data)
+                    file.write(pickledata)
+                    file.write(b"\n")
+
 
         elif loss:
             screen.fill((193, 193, 193))
@@ -196,6 +220,26 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             if mainbutton.update(screen, mouse, mbu, gamefont):
                 running = False
 
+                with open("pastgames", "ab") as file:
+
+                    data = []
+                    tempdata = []
+
+                    for i in rownums:
+                        tempdata.append(i.nums)
+                    data.append(tempdata)
+                    tempdata = []
+                    for x in dots:
+                        tempdata.append(x.color)
+                    data.append(tempdata)
+                    data.append(combo)
+                    data.append((time.year, time.month, time.day, time.hour, time.minute))
+
+                    print(data)
+
+                    pickledata = pickle.dumps(data)
+                    file.write(pickledata)
+                    file.write(b"\n")
 
         mbu = False
 

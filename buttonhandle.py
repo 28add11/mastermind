@@ -21,7 +21,6 @@ class button(pygame.sprite.Sprite):
 
         if self.rect.collidepoint(mousepos):
 
-            print(self.color)
 
             if self.hoverframes < 10:
                 self.hoverframes += 1
