@@ -207,9 +207,8 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
                     print(data)
 
-                    pickledata = pickle.dumps(data)
-                    file.write(pickledata)
-                    file.write(b"\n")
+                    dumpdata = pickle.dumps(data)
+                    file.write(dumpdata + b"\n")
 
 
         elif loss:
@@ -237,9 +236,8 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
                     print(data)
 
-                    pickledata = pickle.dumps(data)
-                    file.write(pickledata)
-                    file.write(b"\n")
+                    dumpdata = pickle.dumps(data)
+                    file.write(dumpdata + b"\n")
 
         mbu = False
 
