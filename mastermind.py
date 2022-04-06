@@ -207,8 +207,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
                     print(data)
 
-                    dumpdata = pickle.dumps(data)
-                    file.write(dumpdata + b"\n")
+                    pickle.dump(data, file)
 
 
         elif loss:
