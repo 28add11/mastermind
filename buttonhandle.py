@@ -20,17 +20,10 @@ class button(pygame.sprite.Sprite):
     def update(self, window : pygame.display, mousepos : tuple, mousebuttonup : bool, font : pygame.font.Font):
 
         if self.rect.collidepoint(mousepos):
-
-
             if self.hoverframes < 10:
                 self.hoverframes += 1
-
-            if self.rect.collidepoint(mousepos) and mousebuttonup:
-                return True
         
         else:
-
-
             if self.hoverframes > self.originalhover:
                 self.hoverframes -= 1
 
@@ -49,3 +42,6 @@ class button(pygame.sprite.Sprite):
 
         text = font.render(self.text, True, (10, 10, 10))
         window.blit(text, self.textpos)
+
+        if self.rect.collidepoint(mousepos) and mousebuttonup:
+            return True

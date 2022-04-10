@@ -205,8 +205,6 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                     data.append(combo)
                     data.append((time.year, time.month, time.day, time.hour, time.minute))
 
-                    print(data)
-
                     pickle.dump(data, file)
 
 
@@ -233,10 +231,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                     data.append(combo)
                     data.append((time.year, time.month, time.day, time.hour, time.minute))
 
-                    print(data)
-
-                    dumpdata = pickle.dumps(data)
-                    file.write(dumpdata + b"\n")
+                    pickle.dump(data, file)
 
         mbu = False
 
