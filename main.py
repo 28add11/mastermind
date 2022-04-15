@@ -1,4 +1,6 @@
+import ctypes
 import pygame
+import os
 import mastermind
 import pastrender
 from buttonhandle import button
@@ -28,6 +30,7 @@ while running:
 
     mouse = pygame.mouse.get_pos()
 
+    #for every event, if that event is useful, do smthin
     for i in pygame.event.get():            
         match i.type:
             case pygame.QUIT:
@@ -45,14 +48,19 @@ while running:
     tutorialtextpos = tutorialtext.get_rect(centerx=screen.get_width() / 2, y=420)
     screen.blit(tutorialtext, tutorialtextpos) 
 
+    #cuz the button script returns true or false this works off that
     if startbutton.update(screen, mouse, mbu, gamefont):
         combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
         mastermind.mainmaster(screen, clock, 12, combo)
 
-    elif quitbutton.update(screen, mouse, mbu, gamefont):
+    if quitbutton.update(screen, mouse, mbu, gamefont):
         running = False
-    elif prevbutton.update(screen, mouse, mbu, gamefont):
-        pastrender.renderpast(screen, clock)
+
+    if prevbutton.update(screen, mouse, mbu, gamefont):
+        if os.path.exists("pastgames.dat"):
+            pastrender.renderpast(screen, clock)
+        else:
+            ctypes.windll.user32.MessageBoxW(0, u"File \"pastgames.dat\" does not exist.", u"Error", 0)
 
     mbu = False
 

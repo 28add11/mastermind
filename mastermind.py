@@ -190,7 +190,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             if mainbutton.update(screen, mouse, mbu, gamefont):
                 running = False
 
-                with open("pastgames", "ab") as file:
+                with open("pastgames.dat", "ab") as file:
 
                     data = []
                     tempdata = []
@@ -216,7 +216,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             if mainbutton.update(screen, mouse, mbu, gamefont):
                 running = False
 
-                with open("pastgames", "ab") as file:
+                with open("pastgames.dat", "ab") as file:
 
                     data = []
                     tempdata = []

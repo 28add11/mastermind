@@ -42,19 +42,6 @@ class dot(pygame.sprite.Sprite):
 
         pygame.draw.circle(window, colors[self.color], (self.position[0], self.position[1]), 10)
 
-class directdot(pygame.sprite.Sprite):
-    #Rather than dot which does all the processing for positon in the class, this class allows for you to do all the processing outside of it for custom positions
-    def __init__(self, color, position):
-        self.color = color
-        self.position = position
-        pygame.sprite.Sprite.__init__(self)
-
-    def update(self, window):
-        colors = ((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
-            (255, 0, 255), (255, 127, 0))
-
-        pygame.draw.circle(window, colors[self.color], (self.position[0], self.position[1]), 10)
-
 #for simple, more clean text rendering
 class text(pygame.sprite.Sprite):
     def __init__(self, text, pos):
@@ -73,7 +60,7 @@ def render_and_dat(textgroup : pygame.sprite.Group, dotgroup : pygame.sprite.Gro
     numsgroup.empty()
         
     #load all data in the file, get the one with the right index, get data
-    content = list(loadall("pastgames"))
+    content = list(loadall("pastgames.dat"))
     data = content[dataind]
     dataindex = 0       
     for i in data[0]:
@@ -130,7 +117,7 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
     backbutton = button((50, 400, 130, 50), (0, 80, 0), "<-", 0, (100, 410))
 
 
-    maxlineind = len(list(loadall("pastgames"))) - 1
+    maxlineind = len(list(loadall("pastgames.dat"))) - 1
     lineind = maxlineind #sets first thing displayed to most recent game
     render_and_dat(texts, dots, rownums, gamefont, lineind)
         
