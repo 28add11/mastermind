@@ -33,6 +33,19 @@ class rownum(pygame.sprite.Sprite):
 class dot(pygame.sprite.Sprite):
     def __init__(self, color, position):
         self.color = color
+        self.position = (40 * position[0] + 260, 40 * position[1] + 20)
+        pygame.sprite.Sprite.__init__(self)
+
+    def update(self, window):
+        colors = ((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
+            (255, 0, 255), (255, 127, 0))
+
+        pygame.draw.circle(window, colors[self.color], (self.position[0], self.position[1]), 10)
+
+class directdot(pygame.sprite.Sprite):
+    #Rather than dot which does all the processing for positon in the class, this class allows for you to do all the processing outside of it for custom positions
+    def __init__(self, color, position):
+        self.color = color
         self.position = position
         pygame.sprite.Sprite.__init__(self)
 
@@ -40,7 +53,7 @@ class dot(pygame.sprite.Sprite):
         colors = ((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
             (255, 0, 255), (255, 127, 0))
 
-        pygame.draw.circle(window, colors[self.color], (40 * self.position[0] + 260, 40 * self.position[1] + 20), 10)
+        pygame.draw.circle(window, colors[self.color], (self.position[0], self.position[1]), 10)
 
 #for simple, more clean text rendering
 class text(pygame.sprite.Sprite):
@@ -76,13 +89,16 @@ def render_and_dat(textgroup : pygame.sprite.Group, dotgroup : pygame.sprite.Gro
         
 
     #I say I made a class for text to make things easy, but
-    combodata = data[2]
     combotext = gamefont.render("Combo: ", True, (10, 10, 10))
-    combodattext = gamefont.render(str(combodata), True, (10, 10, 10))
     combopos = combotext.get_rect(x = 440, y = 10)
-    combodatapos = combodattext.get_rect(x = 445, y = 40)
     textgroup.add(text(combotext, combopos))
-    textgroup.add(text(combodattext, combodatapos))
+    combodata = data[2]
+
+    dataindex = 0
+    for i in combodata:
+        dotgroup.add(dot(i, (dataindex + 5, 1)))
+        print(i)
+        dataindex += 1
 
 
     datedata = data[3]
@@ -122,6 +138,7 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
     while running:
 #-----mainloop-----#
         screen.fill((193, 193, 193))
+        pygame.draw.rect(screen, (10, 10, 10), (440, 40, 160, 40))
         clock.tick(60)
         mbu = False
 
