@@ -1,3 +1,4 @@
+import sys
 import pygame
 import pickle
 import datetime
@@ -94,7 +95,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                 case pygame.QUIT:
                     running = False
                     pygame.quit
-                    quit()
+                    sys.exit()
 
                 case pygame.MOUSEBUTTONUP:
                     #this first bit just is about getting all the important shit

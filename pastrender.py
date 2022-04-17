@@ -1,3 +1,4 @@
+import sys
 from buttonhandle import button
 import pygame
 import pickle
@@ -136,7 +137,7 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
                 case pygame.QUIT:
                     running = False
                     pygame.quit
-                    quit()
+                    sys.exit(["closed"])
 
                 case pygame.MOUSEBUTTONUP:
                     mbu = True
