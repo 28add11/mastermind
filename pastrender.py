@@ -1,4 +1,4 @@
-import sys
+from sys import exit
 from buttonhandle import button
 import pygame
 import pickle
@@ -85,7 +85,6 @@ def render_and_dat(textgroup : pygame.sprite.Group, dotgroup : pygame.sprite.Gro
     dataindex = 0
     for i in combodata:
         dotgroup.add(dot(i, (dataindex + 5, 1)))
-        print(i)
         dataindex += 1
 
 
@@ -116,6 +115,7 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
 
     forwardbutton = button((480, 400, 130, 50), (0, 80, 0), "->", 0, (502, 410))
     backbutton = button((50, 400, 130, 50), (0, 80, 0), "<-", 0, (100, 410))
+    menubutton = button((480, 300, 130, 50), (80, 0, 0), "Menu", 0, (505, 310))
 
 
     maxlineind = len(list(loadall("pastgames.dat"))) - 1
@@ -137,7 +137,7 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
                 case pygame.QUIT:
                     running = False
                     pygame.quit
-                    sys.exit(["closed"])
+                    exit()
 
                 case pygame.MOUSEBUTTONUP:
                     mbu = True
@@ -154,8 +154,11 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
                 lineind = maxlineind
             else:
                 lineind -= 1
-                
+            
             render_and_dat(texts, dots, rownums, gamefont, lineind)
+        
+        if menubutton.update(screen, mouse, mbu, gamefont):
+            running = False
 
         pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
 

@@ -1,6 +1,6 @@
-import ctypes
+from ctypes import windll
 import pygame
-import os
+from os import path
 import mastermind
 import pastrender
 from buttonhandle import button
@@ -58,10 +58,10 @@ while running:
         running = False
 
     if prevbutton.update(screen, mouse, mbu, gamefont):
-        if os.path.exists("pastgames.dat"):
+        if path.exists("pastgames.dat"):
             pastrender.renderpast(screen, clock)
         else:
-            ctypes.windll.user32.MessageBoxW(0, u"File \"pastgames.dat\" does not exist.", u"Error", 0)
+            windll.user32.MessageBoxW(0, u"File \"pastgames.dat\" does not exist.", u"Error", 0)
 
     mbu = False
 

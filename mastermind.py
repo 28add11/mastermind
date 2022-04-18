@@ -1,4 +1,4 @@
-import sys
+from sys import exit
 import pygame
 import pickle
 import datetime
@@ -62,8 +62,6 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
     #mbu is wether or not the mouse button was released that frame
 
     #those were some patronising comments
-
-    print(combo)
     
 
     #these just create static screen elements
@@ -87,7 +85,6 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
         clock.tick(60)
 
-
         mouse = pygame.mouse.get_pos()
 
         for i in pygame.event.get():            
@@ -95,7 +92,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                 case pygame.QUIT:
                     running = False
                     pygame.quit
-                    sys.exit()
+                    exit()
 
                 case pygame.MOUSEBUTTONUP:
                     #this first bit just is about getting all the important shit
@@ -178,6 +175,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                         win = True
                 else:
                     loss = True
+
 
                 row += 1
                 guess = [0, 0, 0, 0]
