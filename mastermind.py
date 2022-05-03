@@ -20,25 +20,34 @@ class rownum(pygame.sprite.Sprite):
         window.blit(textinp, pygame.rect.Rect(220, 40 * self.row + 10, 20, 20))
         
 
+#from stackoverflow, https://stackoverflow.com/a/58541111/17493432 
+def fadeout(screen : pygame.display, clock : pygame.time.Clock):
+    fadeout = pygame.Surface((640, 480))
+    fadeout = fadeout.convert()
+    fadeout.fill((193, 193, 193))
+    for i in range(60):
+        clock.tick(60)
+        fadeout.set_alpha(i)
+        screen.blit(fadeout, (0, 0))
+        pygame.display.update()
 
 class dot(pygame.sprite.Sprite):
-    def __init__(self, position):
+    def __init__(self, position, colorset):
         self.color = 0
         self.position = position
+        self.colorset = colorset
         pygame.sprite.Sprite.__init__(self)
 
     def update(self, window):
-        colors = ((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
-            (255, 0, 255), (255, 127, 0))
 
-        pygame.draw.circle(window, colors[self.color], (40 * self.position[0] + 260, 40 * self.position[1] + 20), 10)
+        pygame.draw.circle(window, self.colorset[self.color], (40 * self.position[0] + 260, 40 * self.position[1] + 20), 10)
 
     def clicked(self, colorind):
         
         self.color = colorind
 
         
-def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, combo):
+def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, combo : list, colorset : tuple):
     '''The main base function for the game
     screen is the screen things will be displaid on, clock is a pygame clock, rowmax is the num of rows with max of 11(to make it harder), 
     combo is the games final combo (set in main for networking), and gamefont is the font'''
@@ -53,6 +62,8 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
     mbu = False
     win = False
     loss = False
+    winpre = False
+    losspre = False
 
     #dots is the group with dots (i know, revolutionary)
     #row is the current row you are playing on
@@ -68,7 +79,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
     for i in range(0, rowmax):
         for x in range(0, 4):
-            dots.add(dot((x, i)))
+            dots.add(dot((x, i), colorset))
 
 
     guessbutton = button((480, 400, 130, 50), (0, 80, 0), "Guess", 0, (502, 410))
@@ -169,16 +180,21 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
                 rownums.add(rownum(row, classnums))
 
-
+                alphasurface = pygame.Surface((680, 480))
                 if row < rowmax - 1:
                    if guess == combo:
                         win = True
                 else:
-                    loss = True
+                    losspre = True
 
 
                 row += 1
                 guess = [0, 0, 0, 0]
+            
+        if losspre:
+            fadeout(screen, clock)
+            losspre = False
+            loss = True
 
 
         if win:
