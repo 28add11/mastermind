@@ -1,7 +1,9 @@
 A clone of the board game mastermind.
 Play by running main.py
 
-Needs: Python 3.10 and Pygame
+Needs: Python 3.10 and Pygame, or you could download the exe and logo
+
+If you want to run the exe then make sure the logo is in the same folder as it, or else things will break
 
 Tutorial: Once you click "Start!" you will see the game board. Start at the top row of dots. Left click to "Increase" the color of a dot, right click to "decrease" it. Once you pick a color combo, click the "Guess" button. There will be two numbers on the row you just made the combo on. The black number is how many of the correct color is in the pattern. Do keep in mind that it does not tell you what color is in the pattern, only how many of the colors in the combo you just made are in the combo. The red numbers represent how many of the black numbers are in the right position for the combo. The wordle equivalent to the black numbers would be a yellow square around the letter, except it doesn't tell you what letter it is. The red numbers are the same, but rather than being like a yellow square they would be like a green square. There can be more than one of the same color in the sequence, and the starting color (the grey dots) can also be in the pattern. 
 
