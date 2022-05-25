@@ -95,7 +95,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
         #-----mainloop-----#
 
         clock.tick(60)
-
+        
         mouse = pygame.mouse.get_pos()
 
         for i in pygame.event.get():            
@@ -183,7 +183,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                 alphasurface = pygame.Surface((680, 480))
                 if row < rowmax - 1:
                    if guess == combo:
-                        win = True
+                        winpre = True
                 else:
                     losspre = True
 
@@ -195,6 +195,10 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             fadeout(screen, clock)
             losspre = False
             loss = True
+        elif winpre:
+            fadeout(screen, clock)
+            winpre = False
+            win = True
 
 
         if win:

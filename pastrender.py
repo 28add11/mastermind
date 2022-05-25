@@ -2,6 +2,7 @@ from sys import exit
 from buttonhandle import button
 import pygame
 import pickle
+from tkinter import messagebox
 
 pygame.init()
 
@@ -52,6 +53,13 @@ class text(pygame.sprite.Sprite):
 
     def update(self, window):
         window.blit(self.text, self.pos)
+
+def deleter(index):
+    content = list(loadall("pastgames.dat"))
+    content.pop(index)
+    with open("pastgames.dat", "wb") as file:
+        for i in content:
+            pickle.dump(i, file)
 
 #now I could break this code up... but
 def render_and_dat(textgroup : pygame.sprite.Group, dotgroup : pygame.sprite.Group, numsgroup : pygame.sprite.Group, gamefont : pygame.sprite.Group, dataind : int):
@@ -116,6 +124,7 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
     forwardbutton = button((480, 400, 130, 50), (0, 80, 0), "->", 0, (502, 410))
     backbutton = button((50, 400, 130, 50), (0, 80, 0), "<-", 0, (100, 410))
     menubutton = button((480, 300, 130, 50), (80, 0, 0), "Menu", 0, (505, 310))
+    deletebutton = button((50, 300, 130, 50), (80, 0, 0), "Delete", 0, (75, 310))
 
 
     maxlineind = len(list(loadall("pastgames.dat"))) - 1
@@ -159,6 +168,11 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
         
         if menubutton.update(screen, mouse, mbu, gamefont):
             running = False
+        
+        if deletebutton.update(screen, mouse, mbu, gamefont):
+            if messagebox.askokcancel("Are You Sure", "Are you sure you want to delete this game?"):
+                deleter(lineind)
+                running = False
 
         pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
 

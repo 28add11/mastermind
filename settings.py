@@ -1,7 +1,8 @@
+from os import path, remove
 import pygame
 import pickle
 from buttonhandle import button
-from tkinter import colorchooser
+from tkinter import colorchooser, messagebox
 from sys import exit
 
 pygame.init()
@@ -12,8 +13,8 @@ def save(data : pygame.Color):
 
 class magicbutton(pygame.sprite.Sprite):
     def __init__(self, xpos : int, color : tuple):
-        self.rect = pygame.Rect((((xpos * 64) + 64) - 10, 230, 20, 20))
-        self.rectcopy = pygame.Rect((((xpos * 64) + 96) - 10, 230, 20, 20))
+        self.rect = pygame.Rect((((xpos * 64) + 64) - 10, 180, 20, 20))
+        self.rectcopy = pygame.Rect((((xpos * 64) + 96) - 10, 180, 20, 20))
         self.hoverframes = 0
         self.originalhover = 0
         self.color = color
@@ -58,12 +59,18 @@ def setting(screen : pygame.display, clock : pygame.time.Clock, font : pygame.fo
 
     menubutton = button((480, 400, 130, 50), (80, 0, 0), "Menu", 0, (505, 410))
     defaultbutton = button((50, 400, 130, 50), (0, 80, 0), "Reset", 0, (75, 410))
+    clearbutton = button((50, 280, 130, 50), (255, 255, 0), "Erase", 0, (75, 290))
 
     with open("settings.conf", "rb") as file:
         colors = pickle.load(file)
 
     for i in range(8):
         buttongroup.add(magicbutton(i, colors[i]))
+
+    colorstext = font.render("Dot colors", True, (10, 10, 10))
+    clearstext = font.render("Clear past games", True, (10, 10, 10))
+    titletext = font.render("Settings", True, (10, 10, 10))
+    titletextpos = titletext.get_rect(centerx=screen.get_width() / 2, y=10)
 
     #-----stuff-----#
 
@@ -83,12 +90,10 @@ def setting(screen : pygame.display, clock : pygame.time.Clock, font : pygame.fo
         
         screen.fill((193, 193, 193))
     
-        titletext = font.render("Settings", True, (10, 10, 10))
-        titletextpos = titletext.get_rect(centerx=screen.get_width() / 2, y=10)
-        screen.blit(titletext, titletextpos)
 
-        colorstext = font.render("Dot colors", True, (10, 10, 10))
-        screen.blit(colorstext, (10, 170))
+        screen.blit(titletext, titletextpos)
+        screen.blit(colorstext, (10, 120))
+        screen.blit(clearstext, (10, 230))
 
         buttongroup.update(screen, mouse, mbu)
 
@@ -108,6 +113,12 @@ def setting(screen : pygame.display, clock : pygame.time.Clock, font : pygame.fo
                 for i, x in zip(buttongroup, range(8)):
                     i.color = colors[x]
                 pickle.dump(colors, file)
+
+        if clearbutton.update(screen, mouse, mbu, font):
+            if not path.exists("pastgames.dat"):
+                messagebox.showwarning("Warning", "You have no past games that need erasing.")
+            elif messagebox.askokcancel("Are You Sure", "Are you sure you want to delete all pastgames?"):
+                remove("pastgames.dat")
                 
 
         mbu = False

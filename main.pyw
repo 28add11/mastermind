@@ -1,6 +1,6 @@
 import pygame
-from os import path
-from tkinter import messagebox, colorchooser
+from os import path, stat
+from tkinter import messagebox
 import pickle
 import mastermind
 import pastrender
@@ -35,6 +35,11 @@ def main():
             pickle.dump(((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
                 (255, 0, 255), (255, 127, 0)), file)
 
+    tutorialtext = gamefont.render("The tutorial is in the readme file!", True, (10, 10, 10))
+    tutorialtextpos = tutorialtext.get_rect(centerx=screen.get_width() / 2, y=420)
+    titletext = gamefont.render("Mastermind", True, (10, 10, 10))
+    titletextpos = titletext.get_rect(centerx=screen.get_width() / 2, y=10)
+
 
     #-----stuff-----#
 
@@ -43,7 +48,6 @@ def main():
         #-----mainloop-----#
 
         clock.tick(60)
-
 
         mouse = pygame.mouse.get_pos()
 
@@ -57,17 +61,16 @@ def main():
 
         screen.fill((193, 193, 193))
     
-        titletext = gamefont.render("Mastermind", True, (10, 10, 10))
-        titletextpos = titletext.get_rect(centerx=screen.get_width() / 2, y=10)
+    
         screen.blit(titletext, titletextpos)   
-
-        tutorialtext = gamefont.render("The tutorial is in the readme file!", True, (10, 10, 10))
-        tutorialtextpos = tutorialtext.get_rect(centerx=screen.get_width() / 2, y=420)
         screen.blit(tutorialtext, tutorialtextpos) 
 
     #cuz the button script returns true or false this works off that
         if startbutton.update(screen, mouse, mbu, gamefont):
             combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
+            for i in range(7):
+                if combo.count(i) > 3:
+                    combo[combo.index(i)] = i + 1
             with open("settings.conf", "rb") as file:
                 mastermind.mainmaster(screen, clock, 12, combo, pickle.load(file))
 
@@ -75,10 +78,10 @@ def main():
             running = False
 
         if prevbutton.update(screen, mouse, mbu, gamefont):
-            if path.exists("pastgames.dat"):
+            if path.exists("pastgames.dat") and stat("pastgames.dat").st_size > 0:
                 pastrender.renderpast(screen, clock)
             else:
-                messagebox.showwarning("Warning", "Pastgames.dat doesn't exist. Play some games first!")
+                messagebox.showwarning("Warning", "Pastgames.dat doesn't exist or has no data. Play some games first!")
     
         if settingbutton.update(screen, mouse, mbu, gamefont):
             setting(screen, clock, gamefont)
