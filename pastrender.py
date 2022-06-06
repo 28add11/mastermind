@@ -38,10 +38,8 @@ class dot(pygame.sprite.Sprite):
         self.position = (40 * position[0] + 260, 40 * position[1] + 20)
         pygame.sprite.Sprite.__init__(self)
 
-    def update(self, window):
-        colors = ((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
-            (255, 0, 255), (255, 127, 0))
-
+    def update(self, window, colors):
+        
         pygame.draw.circle(window, colors[self.color], (self.position[0], self.position[1]), 10)
 
 #for simple, more clean text rendering
@@ -112,7 +110,7 @@ def render_and_dat(textgroup : pygame.sprite.Group, dotgroup : pygame.sprite.Gro
 
 
 
-def renderpast(screen: pygame.display, clock: pygame.time.Clock):
+def renderpast(screen: pygame.display, clock: pygame.time.Clock, colors : tuple:
 #the main function, has all the stuff for the UI
     dots = pygame.sprite.Group()
     rownums = pygame.sprite.Group()
@@ -176,7 +174,7 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock):
 
         pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
 
-        dots.update(screen)
+        dots.update(screen, colors)
         rownums.update(screen, gamefont)
         texts.update(screen)
 
