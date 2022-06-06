@@ -79,7 +79,8 @@ def main():
 
         if prevbutton.update(screen, mouse, mbu, gamefont):
             if path.exists("pastgames.dat") and stat("pastgames.dat").st_size > 0:
-                pastrender.renderpast(screen, clock)
+                with open("settings.conf", "rb") as file:
+                    pastrender.renderpast(screen, clock, pickle.load(file))
             else:
                 messagebox.showwarning("Warning", "Pastgames.dat doesn't exist or has no data. Play some games first!")
     
