@@ -110,7 +110,7 @@ def render_and_dat(textgroup : pygame.sprite.Group, dotgroup : pygame.sprite.Gro
 
 
 
-def renderpast(screen: pygame.display, clock: pygame.time.Clock, colors : tuple:
+def renderpast(screen: pygame.display, clock: pygame.time.Clock, colors : tuple):
 #the main function, has all the stuff for the UI
     dots = pygame.sprite.Group()
     rownums = pygame.sprite.Group()
