@@ -32,15 +32,19 @@ def fadeout(screen : pygame.display, clock : pygame.time.Clock):
         pygame.display.update()
 
 class dot(pygame.sprite.Sprite):
-    def __init__(self, position, colorset):
+    def __init__(self, position, colorset, window):
         self.color = 0
         self.position = position
         self.colorset = colorset
+        self.window = window
         pygame.sprite.Sprite.__init__(self)
+        self.boundrect = pygame.draw.circle(window, self.colorset[self.color], (40 * self.position[0] + 260, 40 * self.position[1] + 20), 10)
 
-    def update(self, window):
+    def update(self):
 
-        pygame.draw.circle(window, self.colorset[self.color], (40 * self.position[0] + 260, 40 * self.position[1] + 20), 10)
+        pygame.draw.circle(self.window, (0, 0, 0), (40 * self.position[0] + 260, 40 * self.position[1] + 20), 12, width=2)
+        pygame.draw.circle(self.window, self.colorset[self.color], (40 * self.position[0] + 260, 40 * self.position[1] + 20), 10)
+        pygame.draw.circle(self.window, (0, 0, 0), (40 * self.position[0] + 260, 40 * self.position[1] + 20), 5)
 
     def clicked(self, colorind):
         
@@ -79,7 +83,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
     for i in range(0, rowmax):
         for x in range(0, 4):
-            dots.add(dot((x, i), colorset))
+            dots.add(dot((x, i), colorset, screen))
 
 
     guessbutton = button((480, 400, 130, 50), (0, 80, 0), "Guess", 0, (502, 410))
@@ -117,10 +121,9 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                         colorup = False
 
                     for i in dots:
-                        irect = pygame.Rect(40 * i.position[0] + 250, 40 * i.position[1] + 10, 20, 20) #hehe irect sounds like erect
-                        #in all seriousness though, this just creates the hitboxes for the dots then checks if they were clicked
 
-                        if irect.collidepoint(mouse) and (i.position[1]) == row:
+                        #this just creates the hitboxes for the dots then checks if they were clicked
+                        if i.boundrect.collidepoint(mouse) and (i.position[1]) == row:
                             x = i.position[0]
 
                             if colorup:
@@ -144,7 +147,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
         pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
 
 
-        dots.update(screen)
+        dots.update()
         rownums.update(screen, gamefont)
 
 

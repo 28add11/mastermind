@@ -24,6 +24,7 @@ def main():
     running = True
     clock = pygame.time.Clock()
     mbu = False
+    framecounter = 0
 
     startbutton = button((80, 210, 80, 60), (0, 80, 0), "Start!", 0, (85, 225))
     settingbutton = button((280, 300, 80, 60), (255, 127, 0), "Sett.", 0, (290, 315))
@@ -59,8 +60,10 @@ def main():
                 case pygame.MOUSEBUTTONUP:
                         mbu = True
 
-        screen.fill((193, 193, 193))
-    
+        screen.fill((56, 56, 56))
+        for x in range(-50, 640, 25):
+            for y in range(-50, 480, 25):
+                pygame.draw.circle(screen, (41, 41, 41), (x + framecounter / 2, y + framecounter / 2), 5)
     
         screen.blit(titletext, titletextpos)   
         screen.blit(tutorialtext, tutorialtextpos) 
@@ -90,6 +93,10 @@ def main():
         mbu = False
 
         pygame.display.update()
+
+        framecounter += 1
+        if framecounter > 100:
+            framecounter = 0
 
     pygame.quit
 
