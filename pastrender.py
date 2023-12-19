@@ -11,7 +11,8 @@ def loadall(filename):
     with open(filename, "rb") as f:
         while True:
             try:
-                yield pickle.load(f)
+                yield pickle.load(f) #We CANNOT load line by line since pickle is a raw binary format 
+                                     #and it just so happens that the number 10 is a newline
             except EOFError:
                 break
 
@@ -30,7 +31,6 @@ class rownum(pygame.sprite.Sprite):
         window.blit(textct, pygame.rect.Rect(410, 40 * self.row + 10, 20, 20))
         window.blit(textinp, pygame.rect.Rect(220, 40 * self.row + 10, 20, 20))
         
-
 
 class dot(pygame.sprite.Sprite):
     def __init__(self, color, position):
@@ -53,7 +53,7 @@ class text(pygame.sprite.Sprite):
         window.blit(self.text, self.pos)
 
 def deleter(index):
-    content = list(loadall("pastgames.dat"))
+    content = list(loadall("pastgames.dat")) #We are re-writing the entire file again with the item removed
     content.pop(index)
     with open("pastgames.dat", "wb") as file:
         for i in content:
@@ -130,9 +130,10 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock, colors : tuple)
     render_and_dat(texts, dots, rownums, gamefont, lineind)
         
 #-----setup-----#
+    
     while running:
-#-----mainloop-----#
-        screen.fill((193, 193, 193))
+    #-----mainloop-----#
+        screen.fill((56, 56, 56))
         pygame.draw.rect(screen, (10, 10, 10), (440, 40, 160, 40))
         clock.tick(60)
         mbu = False
@@ -150,18 +151,17 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock, colors : tuple)
                     mbu = True
 
         if forwardbutton.update(screen, mouse, mbu, gamefont):
+            if lineind == 0:
+                lineind = maxlineind
+            else:
+                lineind -= 1   
+            render_and_dat(texts, dots, rownums, gamefont, lineind)
+
+        if backbutton.update(screen, mouse, mbu, gamefont):
             if lineind == maxlineind:
                 lineind = 0
             else:
                 lineind += 1
-            render_and_dat(texts, dots, rownums, gamefont, lineind)
-
-        if backbutton.update(screen, mouse, mbu, gamefont):
-            if lineind == 0:
-                lineind = maxlineind
-            else:
-                lineind -= 1
-            
             render_and_dat(texts, dots, rownums, gamefont, lineind)
         
         if menubutton.update(screen, mouse, mbu, gamefont):
@@ -170,7 +170,7 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock, colors : tuple)
         if deletebutton.update(screen, mouse, mbu, gamefont):
             if messagebox.askokcancel("Are You Sure", "Are you sure you want to delete this game?"):
                 deleter(lineind)
-                running = False
+                lineind = 0
 
         pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
 

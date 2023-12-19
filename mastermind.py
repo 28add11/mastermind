@@ -24,7 +24,7 @@ class rownum(pygame.sprite.Sprite):
 def fadeout(screen : pygame.display, clock : pygame.time.Clock):
     fadeout = pygame.Surface((640, 480))
     fadeout = fadeout.convert()
-    fadeout.fill((193, 193, 193))
+    fadeout.fill((56, 56, 56))
     for i in range(60):
         clock.tick(60)
         fadeout.set_alpha(i)
@@ -65,8 +65,6 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
     mbu = False
     win = False
     loss = False
-    
-    print(combo)
 
     #these just create static screen elements
 
@@ -124,7 +122,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
 
         #time to draw stuff on the screen!
-        screen.fill((193, 193, 193))
+        screen.fill((56, 56, 56))
 
         pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
 
@@ -178,13 +176,13 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                 guess = [0, 0, 0, 0]
 
         if win:
-            screen.fill((193, 193, 193))
+            screen.fill((56, 56, 56))
             wintext = gamefont.render("You did it!", True, (10, 10, 10))
             wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
             screen.blit(wintext, wintextpos)
 
         elif loss:
-            screen.fill((193, 193, 193))
+            screen.fill((56, 56, 56))
             losetext = gamefont.render("You lost", True, (10, 10, 10))
             losetextpos = losetext.get_rect(centerx=screen.get_width() / 2, y=10)
             screen.blit(losetext, losetextpos)

@@ -11,7 +11,7 @@ def save(data : pygame.Color):
     with open("settings.conf", "wb") as file:
         pickle.dump(data, file)
 
-class magicbutton(pygame.sprite.Sprite):
+class magicbutton(pygame.sprite.Sprite): #Modified button class to match up with display elements
     def __init__(self, xpos : int, color : tuple):
         self.rect = pygame.Rect((((xpos * 64) + 64) - 10, 180, 20, 20))
         self.rectcopy = pygame.Rect((((xpos * 64) + 96) - 10, 180, 20, 20))
@@ -88,7 +88,7 @@ def setting(screen : pygame.display, clock : pygame.time.Clock, font : pygame.fo
                 case pygame.MOUSEBUTTONUP:
                     mbu = True
         
-        screen.fill((193, 193, 193))
+        screen.fill((56, 56, 56))
     
 
         screen.blit(titletext, titletextpos)
