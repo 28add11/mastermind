@@ -31,7 +31,7 @@ def main():
     quitbutton = button((480, 210, 80, 60), (80, 0, 0), "Quit", 0, (490, 225))
     prevbutton = button((280, 210, 80, 60), (252, 252, 80), "Past", 0, (290, 225))
 
-    if not path.exists("settings.conf"):
+    if not path.exists("settings.conf"): #Create settings file if one does not exist and fill it with the default values
         with open("settings.conf", "wb") as file:
             pickle.dump(((53, 53, 53), (193, 193, 193), (255, 50, 50), (50, 255, 50), (50, 50, 255), (255, 255, 0),
                 (255, 0, 255), (255, 127, 0)), file)
@@ -42,7 +42,7 @@ def main():
     titletextpos = titletext.get_rect(centerx=screen.get_width() / 2, y=10)
 
 
-    #-----stuff-----#
+    #-----setup stuff-----#
 
     while running:
 
@@ -52,7 +52,7 @@ def main():
 
         mouse = pygame.mouse.get_pos()
 
-        #for every event, if that event is useful, do smthin
+        #for every event, if that event is useful, do a thing
         for i in pygame.event.get():            
             match i.type:
                 case pygame.QUIT:
@@ -60,15 +60,16 @@ def main():
                 case pygame.MOUSEBUTTONUP:
                         mbu = True
 
-        screen.fill((56, 56, 56))
-        for x in range(-50, 640, 25):
+        screen.fill((56, 56, 56)) 
+
+        for x in range(-50, 640, 25): #Dot scrolling animation
             for y in range(-50, 480, 25):
                 pygame.draw.circle(screen, (41, 41, 41), (x + framecounter / 2, y + framecounter / 2), 5)
     
         screen.blit(titletext, titletextpos)   
         screen.blit(tutorialtext, tutorialtextpos) 
 
-    #cuz the button script returns true or false this works off that
+    #because the button script returns true or false this works off that
         if startbutton.update(screen, mouse, mbu, gamefont):
             combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
             for i in range(7):
@@ -94,7 +95,7 @@ def main():
 
         pygame.display.update()
 
-        framecounter += 1
+        framecounter += 1 #used to display background effects
         if framecounter > 100:
             framecounter = 0
 

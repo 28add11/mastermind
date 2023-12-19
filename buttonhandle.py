@@ -2,7 +2,7 @@ import pygame
 
 
 class button(pygame.sprite.Sprite):
-    '''class for handling buttons in pygame. when the button is hovered over it will grow (waow.)
+    '''class for handling buttons in pygame. when the button is hovered over it will grow.
     will tell you if it's been clicked by returning true. check this by doing if button(args): then what you want it to do'''
     def __init__(self, rect : pygame.Rect, color : tuple, text : str, hoverframes : int, textpos : tuple):
         self.rect = pygame.Rect(rect[0] - 10, rect[1] - 10, rect[2] - 10, rect[3] - 10)
@@ -19,7 +19,7 @@ class button(pygame.sprite.Sprite):
 
     def update(self, window : pygame.display, mousepos : tuple, mousebuttonup : bool, font : pygame.font.Font):
 
-        if self.rect.collidepoint(mousepos):
+        if self.rect.collidepoint(mousepos): #all of this is just to make it display the way i want
             if self.hoverframes < 10:
                 self.hoverframes += 1
         
@@ -53,5 +53,7 @@ class button(pygame.sprite.Sprite):
         text = font.render(self.text, True, (10, 10, 10))
         window.blit(text, self.textpos)
 
-        if self.rect.collidepoint(mousepos) and mousebuttonup:
+        if self.rect.collidepoint(mousepos) and mousebuttonup: #this is collision checking 
             return True
+        else:
+            return False

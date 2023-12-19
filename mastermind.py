@@ -44,7 +44,6 @@ class dot(pygame.sprite.Sprite):
 
         pygame.draw.circle(self.window, (0, 0, 0), (40 * self.position[0] + 260, 40 * self.position[1] + 20), 12, width=2)
         pygame.draw.circle(self.window, self.colorset[self.color], (40 * self.position[0] + 260, 40 * self.position[1] + 20), 10)
-        pygame.draw.circle(self.window, (0, 0, 0), (40 * self.position[0] + 260, 40 * self.position[1] + 20), 5)
 
     def clicked(self, colorind):
         
@@ -59,25 +58,15 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
     dots = pygame.sprite.Group()
     rownums = pygame.sprite.Group()
     gamefont = pygame.font.Font(None, 40)
-    time = datetime.datetime.now()
+    time = datetime.datetime.now() #used in game saving
     row = 0
     running = True
     guess = [0, 0, 0, 0]
     mbu = False
     win = False
     loss = False
-    winpre = False
-    losspre = False
-
-    #dots is the group with dots (i know, revolutionary)
-    #row is the current row you are playing on
-    #running is... i dont know maybe if the game is running
-    #win. did you win?
-    #loss. did you lose?
-    #mbu is wether or not the mouse button was released that frame
-
-    #those were some patronising comments
     
+    print(combo)
 
     #these just create static screen elements
 
@@ -91,7 +80,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
 
 
-    #-----stuff-----#
+    #-----setup stuff-----#
 
 
     while running:
@@ -110,23 +99,16 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                     exit()
 
                 case pygame.MOUSEBUTTONUP:
-                    #this first bit just is about getting all the important shit
-                    #colorup is for wether the colors of the dots go up or down
 
                     mbu = True
 
-                    if i.button == 1 or i.button == 4:
-                        colorup = True
-                    else:
-                        colorup = False
-
-                    for i in dots:
+                    for j in dots:
 
                         #this just creates the hitboxes for the dots then checks if they were clicked
-                        if i.boundrect.collidepoint(mouse) and (i.position[1]) == row:
-                            x = i.position[0]
+                        if j.boundrect.collidepoint(mouse) and (j.position[1]) == row:
+                            x = j.position[0]
 
-                            if colorup:
+                            if i.button == 1 or i.button == 4:
                                 if guess[x] != 7:
                                     guess[x] += 1
 
@@ -138,7 +120,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                                 else:
                                     guess[x] = 7
 
-                            i.clicked(guess[x])
+                            j.clicked(guess[x])
 
 
         #time to draw stuff on the screen!
@@ -155,7 +137,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             if guessbutton.update(screen, mouse, mbu, gamefont):
                 #this deals with if the player presses the guess button
                 #so here there is a bug where the game wants to say you have all 4 colors on the row if you put one color and that color happens to be in the combo
-                #im getting around this by replacing the already "gone to" list items with an impossible (to the game at least) number, 8. if i did list.remove it just fucking broke
+                #im getting around this by replacing the already "gone to" list items with an impossible (to the game at least) number, 8. if i did list.remove it just broke
                 #thats what combocopy is for
                 #aside from that weird fix this is really just simple code for checking if an item is in a list
                 colorthere = 0
@@ -177,83 +159,59 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                 combo = combocopy.copy()
 
 
-                strct = str(colorthere)
+                strct = str(colorthere) #convert to a string for display
                 strinp = str(inpos)
                 classnums = [strct, strinp]
 
                 rownums.add(rownum(row, classnums))
 
-                alphasurface = pygame.Surface((680, 480))
                 if row < rowmax - 1:
                    if guess == combo:
-                        winpre = True
+                        fadeout(screen, clock)
+                        win = True
                 else:
-                    losspre = True
+                    fadeout(screen, clock)
+                    loss = True
 
 
                 row += 1
                 guess = [0, 0, 0, 0]
-            
-        if losspre:
-            fadeout(screen, clock)
-            losspre = False
-            loss = True
-        elif winpre:
-            fadeout(screen, clock)
-            winpre = False
-            win = True
-
 
         if win:
             screen.fill((193, 193, 193))
             wintext = gamefont.render("You did it!", True, (10, 10, 10))
             wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
             screen.blit(wintext, wintextpos)
-            if mainbutton.update(screen, mouse, mbu, gamefont):
-                running = False
-
-                with open("pastgames.dat", "ab") as file:
-
-                    data = []
-                    tempdata = []
-
-                    for i in rownums:
-                        tempdata.append(i.nums)
-                    data.append(tempdata)
-                    tempdata = []
-                    for x in dots:
-                        tempdata.append(x.color)
-                    data.append(tempdata)
-                    data.append(combo)
-                    data.append((time.year, time.month, time.day, time.hour, time.minute))
-
-                    pickle.dump(data, file)
-
 
         elif loss:
             screen.fill((193, 193, 193))
             losetext = gamefont.render("You lost", True, (10, 10, 10))
             losetextpos = losetext.get_rect(centerx=screen.get_width() / 2, y=10)
             screen.blit(losetext, losetextpos)
-            if mainbutton.update(screen, mouse, mbu, gamefont):
-                running = False
 
-                with open("pastgames.dat", "ab") as file:
 
-                    data = []
-                    tempdata = []
+        if (win or loss) and mainbutton.update(screen, mouse, mbu, gamefont): #check if main menu button was pressed and then exit
 
-                    for i in rownums:
-                        tempdata.append(i.nums)
-                    data.append(tempdata)
-                    tempdata = []
-                    for x in dots:
-                        tempdata.append(x.color)
-                    data.append(tempdata)
-                    data.append(combo)
-                    data.append((time.year, time.month, time.day, time.hour, time.minute))
+            running = False
 
-                    pickle.dump(data, file)
+            with open("pastgames.dat", "ab") as file:
+
+                data = []
+                tempdata = []
+
+                for i in rownums:
+                    tempdata.append(i.nums)
+                data.append(tempdata) #adding to the array which will contain all our data for this game
+
+                tempdata = []
+                for x in dots:
+                    tempdata.append(x.color)
+                data.append(tempdata)
+
+                data.append(combo)
+                data.append((time.year, time.month, time.day, time.hour, time.minute))
+
+                pickle.dump(data, file) #Pickle allows us to use plain binary data for the file
 
         mbu = False
 
