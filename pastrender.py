@@ -170,7 +170,13 @@ def renderpast(screen: pygame.display, clock: pygame.time.Clock, colors : tuple)
         if deletebutton.update(screen, mouse, mbu, gamefont):
             if messagebox.askokcancel("Are You Sure", "Are you sure you want to delete this game?"):
                 deleter(lineind)
-                lineind = 0
+
+                maxlineind = len(list(loadall("pastgames.dat"))) - 1
+                if maxlineind >= 0: #prevent crash on deleting last game in file
+                    lineind = maxlineind
+                    render_and_dat(texts, dots, rownums, gamefont, lineind)
+                else:
+                    running = False
 
         pygame.draw.rect(screen, (10, 10, 10), (240, 0, 160, 480))
 
