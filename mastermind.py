@@ -7,7 +7,7 @@ from buttonhandle import button
 pygame.init()
 
 #-----setup stuff-----#
-class rownum(pygame.sprite.Sprite):
+class rownum(pygame.sprite.Sprite): #Class for the info numbers that are displayed on the side.
     def __init__(self, row : int, nums : list):
         self.row = row
         self.nums = nums
@@ -47,13 +47,15 @@ class dot(pygame.sprite.Sprite):
 
     def clicked(self, colorind):
         
-        self.color = colorind
+        self.color = colorind #We make the game itself calculate the color index to simplify events call structure
 
         
 def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, combo : list, colorset : tuple):
     '''The main base function for the game
-    screen is the screen things will be displaid on, clock is a pygame clock, rowmax is the num of rows with max of 11(to make it harder), 
-    combo is the games final combo (set in main for networking), and gamefont is the font'''
+    screen is the screen things will be displayed on, clock is a pygame clock for FPS limiting, 
+    rowmax is the num of rows with max of 11(to make it harder), 
+    combo is the games final combo (set in main for possible future networking), 
+    and colorset is the colors loaded from the settings.conf file'''
 
     dots = pygame.sprite.Group()
     rownums = pygame.sprite.Group()
@@ -89,7 +91,8 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
         
         mouse = pygame.mouse.get_pos()
 
-        for i in pygame.event.get():            
+        for i in pygame.event.get():     #Process all events one by one. Each event has a type which we do things with
+                                         #Each type has attributes, which we can furthur use to our advantage       
             match i.type:
                 case pygame.QUIT:
                     running = False
@@ -106,7 +109,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
                         if j.boundrect.collidepoint(mouse) and (j.position[1]) == row:
                             x = j.position[0]
 
-                            if i.button == 1 or i.button == 4:
+                            if i.button == 1 or i.button == 4: #Checks if it was right click or scroll
                                 if guess[x] != 7:
                                     guess[x] += 1
 
@@ -163,11 +166,11 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
 
                 rownums.add(rownum(row, classnums))
 
-                if row < rowmax - 1:
-                   if guess == combo:
-                        fadeout(screen, clock)
-                        win = True
-                else:
+                if guess == combo:
+                    fadeout(screen, clock)
+                    win = True
+
+                if row >= rowmax - 1:
                     fadeout(screen, clock)
                     loss = True
 
@@ -181,7 +184,7 @@ def mainmaster(screen: pygame.display, clock: pygame.time.Clock, rowmax: int, co
             wintextpos = wintext.get_rect(centerx=screen.get_width() / 2, y=10)
             screen.blit(wintext, wintextpos)
 
-        elif loss:
+        elif loss and not win:
             screen.fill((56, 56, 56))
             losetext = gamefont.render("You lost", True, (10, 10, 10))
             losetextpos = losetext.get_rect(centerx=screen.get_width() / 2, y=10)

@@ -2,7 +2,7 @@ import pygame
 from os import path, stat
 from tkinter import messagebox
 import pickle
-import mastermind
+import mastermind #Each of our seperate "pages" is a different function
 import pastrender
 from buttonhandle import button
 from settings import setting
@@ -16,7 +16,7 @@ def main():
     icon = pygame.image.load('logo.png')
     pygame.display.set_icon(icon)
 
-    pygame.display.set_caption("Mastermind", "epic gaming")
+    pygame.display.set_caption("Mastermind", "Mastermind Game")
 
     gamefont = pygame.font.Font(None, 40)
 
@@ -48,7 +48,7 @@ def main():
 
         #-----mainloop-----#
 
-        clock.tick(60)
+        clock.tick(60) #Limit framerate to 60FPS
 
         mouse = pygame.mouse.get_pos()
 
@@ -56,9 +56,9 @@ def main():
         for i in pygame.event.get():            
             match i.type:
                 case pygame.QUIT:
-                    running = False
+                    running = False #Don't exit execution immediately, to allow for cleaning up assets
                 case pygame.MOUSEBUTTONUP:
-                        mbu = True
+                        mbu = True #Use a boolean to allow for checking in better locations
 
         screen.fill((56, 56, 56)) 
 
@@ -69,7 +69,7 @@ def main():
         screen.blit(titletext, titletextpos)   
         screen.blit(tutorialtext, tutorialtextpos) 
 
-    #because the button script returns true or false this works off that
+        #Button script returns boolean if clicked when drawn, so we exclude the need for a seperate drawing call
         if startbutton.update(screen, mouse, mbu, gamefont):
             combo = [randint(0, 7), randint(0, 7), randint(0, 7), randint(0, 7)]
             for i in range(7):
@@ -86,7 +86,7 @@ def main():
                 with open("settings.conf", "rb") as file:
                     pastrender.renderpast(screen, clock, pickle.load(file))
             else:
-                messagebox.showwarning("Warning", "Pastgames.dat doesn't exist or has no data. Play some games first!")
+                messagebox.showwarning("Warning", "Pastgames.dat doesn't exist or has no data. Play some games first!") #windows msg box
     
         if settingbutton.update(screen, mouse, mbu, gamefont):
             setting(screen, clock, gamefont)
@@ -101,5 +101,5 @@ def main():
 
     pygame.quit
 
-if __name__ == "__main__":
+if __name__ == "__main__": #For functional calling structure, more flexible when substituting code
     main()
